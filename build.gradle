@@ -1,0 +1,29 @@
+buildscript {
+	ext {
+		springBootVersion = '3.0.0'
+		springDependencyManagementVersion = '1.1.0'
+	}
+}
+
+plugins {
+	id 'java'
+	id ("org.springframework.boot") version "${springBootVersion}"
+	id("io.spring.dependency-management") version "${springDependencyManagementVersion}"
+}
+
+group = 'Composition'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation ("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
