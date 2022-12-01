@@ -13,19 +13,33 @@ public class Wall implements Structure {
 
     @Override
     public Optional<Block> findBlockByColor(String color) {
-        return null;
-        //TODO not implemented yet;
+        if (Objects.isNull(color)) {
+            String message = "Color must not be null.";
+            log.error(message);
+            throw new NullPointerException("Color must not be null.");
+        }
+        return blocks.stream().filter(block -> block.getColor().equals(color)).findFirst();
     }
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
-        return null;
-        //TODO not implemented yet;
+        if (Objects.isNull(material)) {
+            String message = "Material must not be null.";
+            log.error(message);
+            throw new NullPointerException(message);
+        }
+        var result = blocks.stream().filter(block -> block.getColor().equals(material)).toList();
+        if (result.isEmpty()) {
+            String message = String.format("There is no block with material: %s", material);
+            log.warn(message);
+            throw new NoSuchElementException(message);
+        }
+        return result;
     }
 
     @Override
     public int count() {
         return 0;
-        //TODO not implemented yet;
+//        //TODO not implemented yet;
     }
 }
