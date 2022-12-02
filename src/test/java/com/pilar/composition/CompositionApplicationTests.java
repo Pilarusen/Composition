@@ -16,10 +16,10 @@ class CompositionApplicationTests {
 
 	private static final Block BLOCK1 = new BlockClass("color1", "material1");
 	private static final Block BLOCK2 = new BlockClass("color2", "material2");
+	private static final Block BLOCK3 = new BlockClass("color3", "material3");
 
 	private static final Composition COMPOSITE_BLOCK4 = new Composition("color4", "material4");
 	private static final Composition COMPOSITE_BLOCK5 = new Composition("color5", "material5");
-	private static final Composition COMPOSITE_BLOCK6 = new Composition("color6", "material6");
 
 	Wall wall;
 	LogCaptor logCaptor;
@@ -28,6 +28,7 @@ class CompositionApplicationTests {
 		wall = new Wall();
 		wall.addBlock(COMPOSITE_BLOCK4);
 		wall.addBlock(BLOCK1);
+//		wall.addBlock();
 	}
 	@Test
 	void findByColorEmptyStringProvidedShouldThrowException() {
@@ -184,10 +185,12 @@ class CompositionApplicationTests {
 	void findBlockByColorWhenBlockIsInCompositionListShouldPass() {
 		//given
 		String inputColor = "color2";
-		Composition COMPOSITE_BLOCK20 = new Composition("color20", "material20");
+		Composition CompositeBlock = new Composition("color", "material");
+		Composition CompositeBlock20 = new Composition("color20", "material20");
 		//when
-		COMPOSITE_BLOCK4.addBlock(COMPOSITE_BLOCK20);
-		COMPOSITE_BLOCK20.addBlock(BLOCK2);
+		CompositeBlock.addBlock(CompositeBlock20);
+		CompositeBlock20.addBlock(BLOCK2);
+		wall.addBlock(CompositeBlock);
 		var result = wall.findBlockByColor(inputColor);
 		//then
 		assertThat(result.get().getColor()).isEqualTo(inputColor);
@@ -198,70 +201,70 @@ class CompositionApplicationTests {
 	void findCompositionByColorWhenCompositionIsInCompositionListShouldPass() {
 		//given
 		String inputColor = "color21";
-		Composition COMPOSITE_BLOCK20 = new Composition("color20", "material20");
-		Composition COMPOSITE_BLOCK21 = new Composition("color21", "material21");
+		Composition CompositeBlock = new Composition("color", "material");
+		Composition CompositeBlock20 = new Composition("color20", "material20");
+		Composition CompositeBlock21 = new Composition("color21", "material21");
 		//when
-		COMPOSITE_BLOCK4.addBlock(COMPOSITE_BLOCK20);
-		COMPOSITE_BLOCK20.addBlock(COMPOSITE_BLOCK21);
+		CompositeBlock.addBlock(CompositeBlock20);
+		CompositeBlock20.addBlock(CompositeBlock21);
+		wall.addBlock(CompositeBlock);
 		var result = wall.findBlockByColor(inputColor);
 		//then
 		assertThat(result.get().getColor()).isEqualTo(inputColor);
-		assertEquals(result.get(), COMPOSITE_BLOCK21);
+		assertEquals(result.get(), CompositeBlock21);
 	}
 
 	@Test
 	void findBlockByMaterialWhenBlockIsInCompositionShouldPass() {
 		//given
 		String inputMaterial = "material22";
-		Composition COMPOSITE_BLOCK20 = new Composition("color20", "material20");
-		Block BLOCK22 = new BlockClass("color22", "material22");
-		COMPOSITE_BLOCK20.addBlock(BLOCK22);
-		wall.addBlock(COMPOSITE_BLOCK20);
+		Composition CompositeBlock20 = new Composition("color20", "material20");
+		Block block22 = new BlockClass("color22", "material22");
+		CompositeBlock20.addBlock(block22);
+		wall.addBlock(CompositeBlock20);
 		//when
 		var result = wall.findBlocksByMaterial(inputMaterial);
 		//then
 		assertThat(result).hasSize(1);
 		assertThat(result.stream().findFirst().get().getMaterial()).isEqualTo(inputMaterial);
-		assertEquals(result.stream().findFirst().get(), BLOCK22);
+		assertEquals(result.stream().findFirst().get(), block22);
 	}
 
 	@Test
 	void findCompositionByMaterialWhenCompositionIsInCompositionListShouldPass() {
 		//given
 		String inputMaterial = "material22";
-		Composition COMPOSITE_BLOCK20 = new Composition("color20", "material20");
-		Composition COMPOSITE_BLOCK21 = new Composition("color21", "material21");
-		Composition COMPOSITE_BLOCK22 = new Composition("color22", "material22");
+		Composition CompositeBlock20 = new Composition("color20", "material20");
+		Composition compositeBlock21 = new Composition("color21", "material21");
+		Composition compositeBlock22 = new Composition("color22", "material22");
 		//when
-		COMPOSITE_BLOCK20.addBlock(COMPOSITE_BLOCK21);
-		COMPOSITE_BLOCK21.addBlock(COMPOSITE_BLOCK22);
-		wall.addBlock(COMPOSITE_BLOCK20);
+		CompositeBlock20.addBlock(compositeBlock21);
+		compositeBlock21.addBlock(compositeBlock22);
+		wall.addBlock(CompositeBlock20);
 		var result = wall.findBlocksByMaterial(inputMaterial);
 		//then
 		assertThat(result).hasSize(1);
 		assertThat(result.stream().findFirst().get().getMaterial()).isEqualTo(inputMaterial);
-		assertEquals(result.stream().findFirst().get(), COMPOSITE_BLOCK22);
+		assertEquals(result.stream().findFirst().get(), compositeBlock22);
 	}
 
 	@Test
 	void findCompositionsByMaterialWhenThreeCompositionsMeetsRequirementsShouldPass() {
 		//given
-		final Composition COMPOSITE_BLOCK10 = new Composition("color4", "material");
-		final Composition COMPOSITE_BLOCK11 = new Composition("color5", "material");
-		final Composition COMPOSITE_BLOCK12 = new Composition("color6", "material");
+		final Composition compositeBlock10 = new Composition("color4", "material");
+		final Composition compositeBlock11 = new Composition("color5", "material");
+		final Composition compositeBlock12 = new Composition("color6", "material");
 		String inputMaterial = "material";
 		//when
-		COMPOSITE_BLOCK4.addBlock(COMPOSITE_BLOCK5);
-		COMPOSITE_BLOCK5.addBlock(BLOCK2);
-		wall.addBlock(COMPOSITE_BLOCK10);
-		wall.addBlock(COMPOSITE_BLOCK11);
-		wall.addBlock(COMPOSITE_BLOCK12);
+		wall.addBlock(compositeBlock10);
+		wall.addBlock(compositeBlock11);
+		wall.addBlock(compositeBlock12);
 		var result = wall.findBlocksByMaterial(inputMaterial);
 		//then
 		assertThat(result).hasSize(3);
-		assertThat(result).contains(COMPOSITE_BLOCK10);
-		assertThat(result).contains(COMPOSITE_BLOCK11);
-		assertThat(result).contains(COMPOSITE_BLOCK12);
+		assertThat(result).contains(compositeBlock10);
+		assertThat(result).contains(compositeBlock11);
+		assertThat(result).contains(compositeBlock12);
 	}
 
 
