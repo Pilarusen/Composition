@@ -20,7 +20,9 @@ public class Wall implements Structure {
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-        var result = blocks.stream().filter(block -> block.getColor().equals(color)).findFirst();
+        var result = blocks.stream().flatMap(Block::flatByStream)
+                .filter(block -> block.getColor().equals(color))
+                .findFirst();
 
         return result;
     }
@@ -32,13 +34,14 @@ public class Wall implements Structure {
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-        var result = blocks.stream().filter(block -> block.getMaterial().equals(material)).collect(Collectors.toList());
+        var result = blocks.stream().flatMap(Block::flatByStream)
+                .filter(block -> block.getMaterial().equals(material)).collect(Collectors.toList());
         if (result.isEmpty()) {
             String message = String.format("There is no block with material: %s.", material);
             log.warn(message);
             throw new NoSuchElementException(message);
         }
-        return result;
+        return (List<Block>) result;
     }
 
     public void addBlock(Block block) {

@@ -1,7 +1,6 @@
 package com.pilar.composition;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -20,5 +19,11 @@ public class Composition extends BlockClass implements CompositeBlock {
     @Override
     public List<Block> getBlocks() {
         return blocks;
+    }
+
+    public Stream<Block> flatByStream() {
+        return Stream.of(super.flatByStream(),
+                        blocks.stream().flatMap(Block::flatByStream))
+                .flatMap(block -> block);
     }
 }
