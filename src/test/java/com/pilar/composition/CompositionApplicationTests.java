@@ -16,10 +16,8 @@ class CompositionApplicationTests {
 
 	private static final Block BLOCK1 = new BlockClass("color1", "material1");
 	private static final Block BLOCK2 = new BlockClass("color2", "material2");
-	private static final Block BLOCK3 = new BlockClass("color3", "material3");
-
+	private static final Composition COMPOSITE_BLOCK3 = new Composition("color3", "material3");
 	private static final Composition COMPOSITE_BLOCK4 = new Composition("color4", "material4");
-	private static final Composition COMPOSITE_BLOCK5 = new Composition("color5", "material5");
 
 	Wall wall;
 	LogCaptor logCaptor;
@@ -28,7 +26,8 @@ class CompositionApplicationTests {
 		wall = new Wall();
 		wall.addBlock(COMPOSITE_BLOCK4);
 		wall.addBlock(BLOCK1);
-//		wall.addBlock();
+		wall.addBlock(BLOCK2);
+		wall.addBlock(COMPOSITE_BLOCK3);
 	}
 	@Test
 	void findByColorEmptyStringProvidedShouldThrowException() {
@@ -108,13 +107,13 @@ class CompositionApplicationTests {
 	@Test
 	void addCompositionToTheSameCompositionWithTheSameBlocksShouldThrowException() {
 		//given
-		final Composition COMPOSITE_BLOCK30 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK31 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK30_5 = new Composition("color30_5", "material30_5");
+		final Composition compositeBlock30 = new Composition("color30", "material30");
+		final Composition compositeBlock31 = new Composition("color30", "material30");
+		final Composition compositeBlock305 = new Composition("color30_5", "material30_5");
 		//when
-		COMPOSITE_BLOCK30.addBlock(COMPOSITE_BLOCK30_5);
-		COMPOSITE_BLOCK31.addBlock(COMPOSITE_BLOCK30_5);
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> COMPOSITE_BLOCK30.addBlock(COMPOSITE_BLOCK31));
+		compositeBlock30.addBlock(compositeBlock305);
+		compositeBlock31.addBlock(compositeBlock305);
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> compositeBlock30.addBlock(compositeBlock31));
 		String expectedMessage = "Can not add composition to itself.";
 		//then
 		assertEquals(exception.getMessage(), expectedMessage);
@@ -123,38 +122,38 @@ class CompositionApplicationTests {
 	@Test
 	void addCompositionToTheSameCompositionWithDifferentBlocksShouldPass() {
 		//given
-		final Composition COMPOSITE_BLOCK30 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK31 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK32 = new Composition("color32", "material32");
-		final Composition COMPOSITE_BLOCK33 = new Composition("color33", "material33");
+		final Composition compositeBlock30 = new Composition("color30", "material30");
+		final Composition compositeBlock31 = new Composition("color30", "material30");
+		final Composition compositeBlock32 = new Composition("color32", "material32");
+		final Composition compositeBlock33 = new Composition("color33", "material33");
 		//when
-		COMPOSITE_BLOCK30.addBlock(COMPOSITE_BLOCK32);
-		COMPOSITE_BLOCK31.addBlock(COMPOSITE_BLOCK33);
-		wall.addBlock(COMPOSITE_BLOCK30);
-		wall.addBlock(COMPOSITE_BLOCK31);
+		compositeBlock30.addBlock(compositeBlock32);
+		compositeBlock31.addBlock(compositeBlock33);
+		wall.addBlock(compositeBlock30);
+		wall.addBlock(compositeBlock31);
 		//then
-		assertThat(COMPOSITE_BLOCK30.getBlocks()).hasSize(1).containsExactly(COMPOSITE_BLOCK32);
-		assertThat(COMPOSITE_BLOCK31.getBlocks()).hasSize(1).containsExactly(COMPOSITE_BLOCK33);
+		assertThat(compositeBlock30.getBlocks()).hasSize(1).containsExactly(compositeBlock32);
+		assertThat(compositeBlock31.getBlocks()).hasSize(1).containsExactly(compositeBlock33);
 	}
 
 	@Test
 	void addCompositionToTheSameCompositionWithDifferentBlocksShouldPass__ThenFindByMaterialReturnsListOfTwoBlocks() {
 		//given
-		final Composition COMPOSITE_BLOCK30 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK31 = new Composition("color30", "material30");
-		final Composition COMPOSITE_BLOCK32 = new Composition("color32", "material32");
-		final Composition COMPOSITE_BLOCK33 = new Composition("color33", "material33");
+		final Composition compositeBlock30 = new Composition("color30", "material30");
+		final Composition compositeBlock31 = new Composition("color30", "material30");
+		final Composition compositeBlock32 = new Composition("color32", "material32");
+		final Composition compositeBlock33 = new Composition("color33", "material33");
 		//when
-		COMPOSITE_BLOCK30.addBlock(COMPOSITE_BLOCK32);
-		COMPOSITE_BLOCK31.addBlock(COMPOSITE_BLOCK33);
-		wall.addBlock(COMPOSITE_BLOCK30);
-		wall.addBlock(COMPOSITE_BLOCK31);
+		compositeBlock30.addBlock(compositeBlock32);
+		compositeBlock31.addBlock(compositeBlock33);
+		wall.addBlock(compositeBlock30);
+		wall.addBlock(compositeBlock31);
 		//then
-		assertThat(COMPOSITE_BLOCK30.getBlocks()).hasSize(1).containsExactly(COMPOSITE_BLOCK32);
-		assertThat(COMPOSITE_BLOCK31.getBlocks()).hasSize(1).containsExactly(COMPOSITE_BLOCK33);
+		assertThat(compositeBlock30.getBlocks()).hasSize(1).containsExactly(compositeBlock32);
+		assertThat(compositeBlock31.getBlocks()).hasSize(1).containsExactly(compositeBlock33);
 		var result = wall.findBlocksByMaterial("material30");
 		assertThat(result).hasSize(2);
-		assertThat(result).contains(COMPOSITE_BLOCK30).contains(COMPOSITE_BLOCK31);
+		assertThat(result).contains(compositeBlock30).contains(compositeBlock31);
 	}
 
 	@Test
@@ -184,17 +183,18 @@ class CompositionApplicationTests {
 	@Test
 	void findBlockByColorWhenBlockIsInCompositionListShouldPass() {
 		//given
-		String inputColor = "color2";
+		String inputColor = "color21";
 		Composition CompositeBlock = new Composition("color", "material");
 		Composition CompositeBlock20 = new Composition("color20", "material20");
+		Composition CompositeBlock21 = new Composition("color21", "material21");
 		//when
 		CompositeBlock.addBlock(CompositeBlock20);
-		CompositeBlock20.addBlock(BLOCK2);
+		CompositeBlock20.addBlock(CompositeBlock21);
 		wall.addBlock(CompositeBlock);
 		var result = wall.findBlockByColor(inputColor);
 		//then
 		assertThat(result.get().getColor()).isEqualTo(inputColor);
-		assertEquals(result.get(), BLOCK2);
+		assertEquals(result.get(), CompositeBlock21);
 	}
 
 	@Test
@@ -266,6 +266,38 @@ class CompositionApplicationTests {
 		assertThat(result).contains(compositeBlock11);
 		assertThat(result).contains(compositeBlock12);
 	}
+
+	@Test
+	void countWallShouldPass() {
+		//given + when
+		int expectedCount = 4;
+		//then
+		assertEquals(expectedCount, wall.count());
+	}
+
+//	@Test
+//	void countBlockNumberManyInManyShouldBeCorrect() {
+//		//given
+//		Composition compositeBlock20 = new Composition("color20", "material20");
+//		Composition compositeBlock21 = new Composition("color21", "material21");
+//		Composition compositeBlock22 = new Composition("color22", "material22");
+//		//when
+//		System.out.println(wall.count());
+//		compositeBlock20.addBlock(compositeBlock21);
+//		compositeBlock21.addBlock(compositeBlock22);
+//		wall.addBlock(compositeBlock20);
+//		int expected1 = 7;
+//		var result1 = wall.count();
+//		int expected2 = 6;
+//		compositeBlock22.addBlock(compositeBlock20);
+//		var result2 = wall.count();
+//		//TODO ALERT StackOverflow error!!!
+//		//then
+//		assertEquals(expected1, result1);
+////		assertEquals(expected2, result2);
+//
+//
+//	}
 
 
 
