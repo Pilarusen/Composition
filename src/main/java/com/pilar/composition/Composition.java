@@ -1,10 +1,13 @@
 package com.pilar.composition;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Composition extends BlockClass implements CompositeBlock {
 
-    private List<Block> blocks;
+    private List<Block> blocks = new ArrayList<>();
 
     public Composition(String color, String material) {
         super(color, material);
@@ -16,11 +19,6 @@ public class Composition extends BlockClass implements CompositeBlock {
 
     @Override
     public List<Block> getBlocks() {
-        return null;
-    }
-
-    public int countBlocks() {
-        return 0;
-        //TODO not implemented yet
+        return blocks;
     }
 }
