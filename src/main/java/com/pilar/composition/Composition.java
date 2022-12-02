@@ -14,6 +14,10 @@ public class Composition extends BlockClass implements CompositeBlock {
     }
 
     public void addBlock(Block block) {
+        if (this.equals(block)) {
+            throw new IllegalArgumentException("Can not add composition to itself.");
+            //TODO think about add custom exception
+        }
         blocks.add(block);
     }
 
