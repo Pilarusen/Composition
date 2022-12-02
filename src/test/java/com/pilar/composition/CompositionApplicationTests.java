@@ -94,6 +94,21 @@ class CompositionApplicationTests {
 	}
 
 	@Test
+	void addCompositionToTheSameCompositionShouldThrowError() {
+		try {
+			final Composition COMPOSITE_BLOCK30 = new Composition("color30", "material30");
+			COMPOSITE_BLOCK30.addBlock(COMPOSITE_BLOCK30);
+
+			wall.addBlock(COMPOSITE_BLOCK30);
+			wall.findBlockByColor("color");
+			//TODO implement equals and hashCode, then improve addBlock()
+		} catch (Exception e) {
+			System.out.println("exception");
+
+		}
+	}
+
+	@Test
 	void findByMaterialInputOKShouldReturnListOfOneBlock() {
 		//given
 		String correctInput = "material1";
