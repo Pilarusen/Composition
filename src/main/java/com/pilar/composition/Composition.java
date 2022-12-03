@@ -80,9 +80,4 @@ public class Composition extends BlockClass implements CompositeBlock {
         Composition that = (Composition) o;
         return blocks.equals(that.blocks);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), blocks);
-    }
 }
