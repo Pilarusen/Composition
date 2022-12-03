@@ -26,13 +26,17 @@ public class Composition extends BlockClass implements CompositeBlock {
 
     private void checkIsEqual(Block block) {
         if (this.equals(block)) {
+            String message = "Can not add composition to itself.";
+            log.error(message);
             throw new IllegalArgumentException("Can not add composition to itself.");
         }
     }
 
     private void checkIsBlockPresentInStructure(Block block) {
         if (isBlockPresent(block)) {
-            throw new IllegalArgumentException("Block you try to add is already in structure.");
+            String message = "Block you try to add is already in structure.";
+            log.error(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
@@ -42,14 +46,10 @@ public class Composition extends BlockClass implements CompositeBlock {
         boolean result = false;
         if (block instanceof CompositeBlock) {
             log.info("Checking if composition is already in structure.");
-            List<Block> compositionList = ((CompositeBlock) block).getBlocks();
-            result = compositionList.stream()
+            result = ((CompositeBlock) block).getBlocks()
+                    .stream()
                     .flatMap(Block::flatByStream)
                     .anyMatch(composition -> composition.equals(this));
-            //TODO to remove
-            log.info("==============================");
-            log.info(String.valueOf(result));
-            log.info("==============================");
         }
         return result;
     }
