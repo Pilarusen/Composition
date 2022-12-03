@@ -1,6 +1,5 @@
 package com.pilar.composition;
 
-import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,6 @@ class CompositionApplicationTests {
     private static final Composition COMPOSITE_BLOCK4 = new Composition("color4", "material4");
 
     Wall wall;
-    LogCaptor logCaptor;
 
     @BeforeEach
     void setUp() {
@@ -35,42 +33,36 @@ class CompositionApplicationTests {
     void findByColorEmptyStringProvidedShouldThrowException() {
         //given
         String emptyString = "";
-        LogCaptor logCaptor = LogCaptor.forClass(Wall.class);
         //when
         Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> wall.findBlockByColor(emptyString));
         String expectedMessage = "Input must be a value.";
         //then
         assertEquals(exception.getMessage(), expectedMessage);
-        assertThat(logCaptor.getLogs()).hasSize(1);
     }
 
     @Test
     void findByMaterialEmptyStringProvidedShouldThrowException() {
         //given
         String emptyString = "";
-        LogCaptor logCaptor = LogCaptor.forClass(Wall.class);
         //when
         Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> wall.findBlocksByMaterial(emptyString));
         String expectedMessage = "Input must be a value.";
         //then
         assertEquals(exception.getMessage(), expectedMessage);
-        assertThat(logCaptor.getLogs()).hasSize(1);
     }
 
     @Test
     void finByMaterialWhenThereIsNoBlockWithThatMaterialShouldThrowException() {
         //given
         String sampleInput = "sampleInput";
-        LogCaptor logCaptor = LogCaptor.forClass(Wall.class);
         //when
         Exception exception = assertThrows(NoSuchElementException.class,
                 () -> wall.findBlocksByMaterial(sampleInput));
         String expectedMessage = "There is no block with material:";
         //then
         assertThat(exception.getMessage()).contains(expectedMessage);
-        assertThat(logCaptor.getLogs()).hasSize(1);
     }
 
     @Test
@@ -91,7 +83,7 @@ class CompositionApplicationTests {
         var result = wall.findBlockByColor(correctInput);
         //then
         assertTrue(result.isPresent());
-        assertThat(BLOCK1.equals(result));
+        assertEquals(BLOCK1, result.get());
     }
 
     @Test
@@ -307,7 +299,7 @@ class CompositionApplicationTests {
     }
 
     @Test
-    void countBlockNumberManyInManyShouldBeCorrect() {
+    void countBlockNumberComplexStructureShouldBeCorrect() {
         //given
         Composition compositeBlock20 = new Composition("color20", "material20");
         Composition compositeBlock21 = new Composition("color21", "material21");
@@ -316,7 +308,9 @@ class CompositionApplicationTests {
         compositeBlock20.addBlock(compositeBlock21);
         compositeBlock21.addBlock(compositeBlock22);
         wall.addBlock(compositeBlock20);
-        int expected = 7;
+        wall.addBlock(compositeBlock21);
+        //@BeforeEach count = 4;
+        int expected = 9;
         var result = wall.count();
         //then
         assertEquals(expected, result);
