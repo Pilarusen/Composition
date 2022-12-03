@@ -291,17 +291,31 @@ class CompositionApplicationTests {
 		System.out.println(wall.count());
 		compositeBlock20.addBlock(compositeBlock21);
 		compositeBlock21.addBlock(compositeBlock22);
+//		compositeBlock22.addBlock(compositeBlock20);
 		wall.addBlock(compositeBlock20);
 		int expected1 = 7;
 		var result1 = wall.count();
 		int expected2 = 6;
-//		compositeBlock22.addBlock(compositeBlock20);
 		var result2 = wall.count();
 		//TODO ALERT StackOverflow error!!!
 		//then
 		assertEquals(expected1, result1);
 //		assertEquals(expected2, result2);
 
+
+	}
+
+
+	@Test
+	void testChowAddCheckWorks() {
+		//given
+		Composition compositeBlock20 = new Composition("color20", "material20");
+		Composition compositeBlock21 = new Composition("color21", "material21");
+		Composition compositeBlock22 = new Composition("color22", "material22");
+		//when
+		compositeBlock20.addBlock(compositeBlock21);
+		compositeBlock21.addBlock(compositeBlock22);
+		compositeBlock22.addBlock(compositeBlock20);
 
 	}
 
