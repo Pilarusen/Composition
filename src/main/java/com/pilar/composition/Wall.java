@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -25,11 +24,16 @@ public class Wall implements Structure {
     @Override
     public List<Block> findBlocksByMaterial(String material) {
         checkIsNullOrEmpty(material);
-        var result = blocksToStream()
+        var result =
+                blocksToStream()
                 .filter(block -> block.getMaterial().equals(material))
-                .collect(Collectors.toList());
+                .toList();
         checkIsEmpty(material, result);
         return result;
+    }
+
+    private Stream<Block> blocksToStream() {
+        return blocks.stream().flatMap(Block::flatByStream);
     }
 
     private void checkIsEmpty(String material, List<Block> blockList) {
@@ -46,10 +50,6 @@ public class Wall implements Structure {
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-    }
-
-    private Stream<Block> blocksToStream() {
-        return blocks.stream().flatMap(Block::flatByStream);
     }
 
     public void addBlock(Block block) {
