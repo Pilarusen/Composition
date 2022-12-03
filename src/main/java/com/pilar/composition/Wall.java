@@ -1,39 +1,41 @@
 package com.pilar.composition;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @Slf4j
 public class Wall implements Structure {
-    private List<Block> blocks = new ArrayList<>();
+    private final List<Block> blocks = new ArrayList<>();
 
     @Override
     public Optional<Block> findBlockByColor(String color) {
         checkIsNullOrEmpty(color);
-        return blocksToStream()
-                .filter(block -> block.getColor().equals(color))
+        return blocksToFlatStream()
+                .filter(block -> color.equals(block.getColor()))
                 .findFirst();
     }
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
+        log.info("Finding blocks by material {}.", material);
         checkIsNullOrEmpty(material);
-        var result =
-                blocksToStream()
-                .filter(block -> block.getMaterial().equals(material))
-                .toList();
+        List<Block> result =
+                blocksToFlatStream()
+                        .filter(block -> material.equals(block.getMaterial()))
+                        .toList();
         checkIsEmpty(material, result);
+        log.info("Number of found blocks {}.", result.size());
         return result;
     }
 
-    private Stream<Block> blocksToStream() {
-        return blocks.stream().flatMap(Block::flatByStream);
+    private Stream<Block> blocksToFlatStream() {
+        return blocks.stream().flatMap(Block::toStream);
     }
 
     private void checkIsEmpty(String material, List<Block> blockList) {
@@ -45,8 +47,8 @@ public class Wall implements Structure {
     }
 
     private void checkIsNullOrEmpty(String input) {
-        if (Objects.isNull(input) || input.isEmpty()) {
-            String message = "Input must be a value.";
+        if (StringUtils.isBlank(input)) {
+            String message = "Input must not be null or empty.";
             log.error(message);
             throw new IllegalArgumentException(message);
         }
@@ -54,10 +56,11 @@ public class Wall implements Structure {
 
     public void addBlock(Block block) {
         blocks.add(block);
+        log.info("Block {} was added.", block.toString());
     }
 
     @Override
     public int count() {
-        return (int) blocksToStream().count();
+        return (int) blocksToFlatStream().count();
     }
 }

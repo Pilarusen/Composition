@@ -9,13 +9,13 @@ import java.util.stream.Stream;
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode
-public class BlockClass implements Block {
+public class BlockImpl implements Block {
 
     private final String color;
     private final String material;
 
     @Override
-    public Stream<Block> flatByStream() {
+    public Stream<Block> toStream() {
         return Stream.of(this);
     }
 }

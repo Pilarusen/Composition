@@ -5,16 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
 @Slf4j
-public class Composition extends BlockClass implements CompositeBlock {
+public class CompositeBlockImpl extends BlockImpl implements CompositeBlock {
 
-    private List<Block> blocks = new ArrayList<>();
+    private final List<Block> blocks = new ArrayList<>();
 
-    public Composition(String color, String material) {
+    public CompositeBlockImpl(String color, String material) {
         super(color, material);
     }
 
@@ -27,14 +26,14 @@ public class Composition extends BlockClass implements CompositeBlock {
     /**
      * Methods checkIsEqual(block) and checkIsBlockPresentInStructure(block) are to avoid from add
      * composition to another composition, due to avoid StackOverflowError when using Wall.class methods:
-     *  - findBlockByColor(String color)
-     *  - findBlocksByMaterial(String material)
-     *  - count().
-     *  The reason is that flatByStream() which is essential to do above operations
-     *  is providing to StackOverflowError when:
-     *  - composition is a block of itself (checkIsEqual(block)), also
-     *  - composition is already in structure of composition (checkIsBlockPresentInStructure(block))*
-     *  */
+     * - findBlockByColor(String color)
+     * - findBlocksByMaterial(String material)
+     * - count().
+     * The reason is that flatByStream() which is essential to do above operations
+     * is providing to StackOverflowError when:
+     * - composition is a block of itself (checkIsEqual(block)),
+     * - composition is already in structure of composition (checkIsBlockPresentInStructure(block))*
+     */
     private void checkIsEqual(Block block) {
         if (this.equals(block)) {
             String message = "Can not add composition to itself.";
@@ -53,22 +52,21 @@ public class Composition extends BlockClass implements CompositeBlock {
 
     //checks if composition has this
     private boolean isBlockPresent(Block block) {
-        //TODO think about add custom exception
         boolean result = false;
         if (block instanceof CompositeBlock) {
             log.info("Checking if composition is already in structure.");
             result = ((CompositeBlock) block).getBlocks()
                     .stream()
-                    .flatMap(Block::flatByStream)
+                    .flatMap(Block::toStream)
                     .anyMatch(composition -> composition.equals(this));
         }
         return result;
     }
 
     @Override
-    public Stream<Block> flatByStream() {
-        return Stream.of(super.flatByStream(),
-                        blocks.stream().flatMap(Block::flatByStream))
+    public Stream<Block> toStream() {
+        return Stream.of(super.toStream(),
+                        blocks.stream().flatMap(Block::toStream))
                 .flatMap(block -> block);
     }
 
@@ -77,7 +75,7 @@ public class Composition extends BlockClass implements CompositeBlock {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        Composition that = (Composition) o;
+        CompositeBlockImpl that = (CompositeBlockImpl) o;
         return blocks.equals(that.blocks);
     }
 }
