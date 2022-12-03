@@ -285,11 +285,25 @@ class CompositionApplicationTests {
     }
 
     @Test
-    void countWallShouldPass() {
-        //given + when
-        int expectedCount = 4;
+    void findCompositionsByMaterialWhenMixedStructureShouldReturnListOfThreeDuplicates() {
+        //given
+        String colorInput = "color12";
+        final Composition compositeBlock10 = new Composition("color4", "material");
+        final Composition compositeBlock11 = new Composition("color5", "material");
+        final Composition compositeBlock12 = new Composition(colorInput, "material");
+        String inputMaterial = "material";
+        //when
+        compositeBlock10.addBlock(compositeBlock11);
+        compositeBlock11.addBlock(compositeBlock12);
+        wall.addBlock(compositeBlock10);
+        wall.addBlock(compositeBlock11);
+        wall.addBlock(compositeBlock12);
+        wall.addBlock(compositeBlock12);
+        var result = wall.findBlocksByMaterial(inputMaterial).stream()
+                .filter(block -> block.getColor().equals(colorInput)).toList();
         //then
-        assertEquals(expectedCount, wall.count());
+        var filteredResult = result.stream().filter(block -> block.getColor().equals(colorInput));
+        assertThat(filteredResult).hasSize(4);
     }
 
     @Test
