@@ -7,5 +7,6 @@ interface Block {
 
     String getMaterial();
 
+    //Flat structure by flatMap
     Stream<Block> flatByStream();
 }
