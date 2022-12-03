@@ -120,6 +120,21 @@ class CompositionApplicationTests {
 	}
 
 	@Test
+	void addCompositionComposition__WhenCompositionIsAlreadyInStructureShouldThrowException() {
+		//given
+		final Composition compositeBlock30 = new Composition("color30", "material30");
+		final Composition compositeBlock31 = new Composition("color31", "material31");
+		final Composition compositeBlock32 = new Composition("color32", "material32");
+		//when
+		compositeBlock30.addBlock(compositeBlock31);
+		compositeBlock31.addBlock(compositeBlock32);
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> compositeBlock32.addBlock(compositeBlock30));
+		String expectedMessage = "Block you try to add is already in structure.";
+		//then
+		assertEquals(exception.getMessage(), expectedMessage);
+	}
+
+	@Test
 	void addCompositionToTheSameCompositionWithDifferentBlocksShouldPass() {
 		//given
 		final Composition compositeBlock30 = new Composition("color30", "material30");
