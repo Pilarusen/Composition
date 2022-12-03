@@ -39,27 +39,23 @@ public class Composition extends BlockClass implements CompositeBlock {
     private boolean isBlockPresent(Block block) {
         //TODO check if block has this
         //TODO think about add custom exception
+        boolean result = false;
         if (block instanceof CompositeBlock) {
-            log.info("checking composition");
-
-           var compositionList = ((CompositeBlock) block).getBlocks();
-
-            boolean result = compositionList.stream()
+            log.info("Checking if composition is already in structure.");
+            List<Block> compositionList = ((CompositeBlock) block).getBlocks();
+            result = compositionList.stream()
                     .flatMap(Block::flatByStream)
                     .anyMatch(composition -> composition.equals(this));
-
+            //TODO to remove
             log.info("==============================");
             log.info(String.valueOf(result));
             log.info("==============================");
-
             if (result) {
                 log.error("error");
                 throw new IllegalArgumentException();
             }
-        } else {
-            System.out.println("It is not a composition");
         }
-        return false;
+        return result;
     }
 
     @Override
