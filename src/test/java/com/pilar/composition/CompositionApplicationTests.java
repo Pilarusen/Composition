@@ -201,17 +201,19 @@ class CompositionApplicationTests {
 	void findCompositionByColorWhenCompositionIsInCompositionListShouldPass() {
 		//given
 		String inputColor = "color21";
-		Composition CompositeBlock = new Composition("color", "material");
-		Composition CompositeBlock20 = new Composition("color20", "material20");
-		Composition CompositeBlock21 = new Composition("color21", "material21");
+		Composition compositeBlock = new Composition("color", "material");
+		Composition compositeBlock20 = new Composition("color20", "material20");
+		Composition compositeBlock21 = new Composition("color21", "material21");
 		//when
-		CompositeBlock.addBlock(CompositeBlock20);
-		CompositeBlock20.addBlock(CompositeBlock21);
-		wall.addBlock(CompositeBlock);
+		compositeBlock.addBlock(compositeBlock20);
+		compositeBlock20.addBlock(compositeBlock21);
+		wall.addBlock(compositeBlock);
+//		compositeBlock21.addBlock(compositeBlock);
+		//TODO ALERT StackOverflow error!!!
 		var result = wall.findBlockByColor(inputColor);
 		//then
 		assertThat(result.get().getColor()).isEqualTo(inputColor);
-		assertEquals(result.get(), CompositeBlock21);
+		assertEquals(result.get(), compositeBlock21);
 	}
 
 	@Test
@@ -259,6 +261,10 @@ class CompositionApplicationTests {
 		wall.addBlock(compositeBlock10);
 		wall.addBlock(compositeBlock11);
 		wall.addBlock(compositeBlock12);
+		compositeBlock10.addBlock(compositeBlock11);
+		compositeBlock11.addBlock(compositeBlock12);
+//		compositeBlock12.addBlock(compositeBlock10);
+		//TODO ALERT StackOverflow error!!!
 		var result = wall.findBlocksByMaterial(inputMaterial);
 		//then
 		assertThat(result).hasSize(3);
@@ -275,29 +281,29 @@ class CompositionApplicationTests {
 		assertEquals(expectedCount, wall.count());
 	}
 
-//	@Test
-//	void countBlockNumberManyInManyShouldBeCorrect() {
-//		//given
-//		Composition compositeBlock20 = new Composition("color20", "material20");
-//		Composition compositeBlock21 = new Composition("color21", "material21");
-//		Composition compositeBlock22 = new Composition("color22", "material22");
-//		//when
-//		System.out.println(wall.count());
-//		compositeBlock20.addBlock(compositeBlock21);
-//		compositeBlock21.addBlock(compositeBlock22);
-//		wall.addBlock(compositeBlock20);
-//		int expected1 = 7;
-//		var result1 = wall.count();
-//		int expected2 = 6;
+	@Test
+	void countBlockNumberManyInManyShouldBeCorrect() {
+		//given
+		Composition compositeBlock20 = new Composition("color20", "material20");
+		Composition compositeBlock21 = new Composition("color21", "material21");
+		Composition compositeBlock22 = new Composition("color22", "material22");
+		//when
+		System.out.println(wall.count());
+		compositeBlock20.addBlock(compositeBlock21);
+		compositeBlock21.addBlock(compositeBlock22);
+		wall.addBlock(compositeBlock20);
+		int expected1 = 7;
+		var result1 = wall.count();
+		int expected2 = 6;
 //		compositeBlock22.addBlock(compositeBlock20);
-//		var result2 = wall.count();
-//		//TODO ALERT StackOverflow error!!!
-//		//then
-//		assertEquals(expected1, result1);
-////		assertEquals(expected2, result2);
-//
-//
-//	}
+		var result2 = wall.count();
+		//TODO ALERT StackOverflow error!!!
+		//then
+		assertEquals(expected1, result1);
+//		assertEquals(expected2, result2);
+
+
+	}
 
 
 
