@@ -1,43 +1,21 @@
 package com.pilar.composition;
 
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import java.util.stream.Stream;
 
+@Getter
+@RequiredArgsConstructor
+@EqualsAndHashCode
 public class BlockClass implements Block {
 
     private final String color;
     private final String material;
 
-    public BlockClass(String color, String material) {
-        this.color = color;
-        this.material = material;
-    }
-
     @Override
-    public String getColor() {
-        return color;
-    }
-
-    @Override
-    public String getMaterial() {
-        return material;
-    }
-
-    @Override
-    public Stream flatByStream() {
+    public Stream<Block> flatByStream() {
         return Stream.of(this);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BlockClass)) return false;
-        BlockClass that = (BlockClass) o;
-        return color.equals(that.color) && material.equals(that.material);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(color, material);
     }
 }

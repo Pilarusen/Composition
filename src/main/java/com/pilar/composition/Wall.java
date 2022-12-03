@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public class Wall implements Structure {
@@ -15,12 +16,8 @@ public class Wall implements Structure {
 
     @Override
     public Optional<Block> findBlockByColor(String color) {
-        if (Objects.isNull(color) || color.isEmpty()) {
-            String message = "Color must be a value.";
-            log.error(message);
-            throw new IllegalArgumentException(message);
-        }
-        var result = blocks.stream().flatMap(Block::flatByStream)
+        checkIsNullOrEmpty(color);
+        var result = blocksToStream()
                 .filter(block -> block.getColor().equals(color))
                 .findFirst();
 
@@ -29,19 +26,32 @@ public class Wall implements Structure {
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
-        if (Objects.isNull(material) || material.isEmpty()) {
-            String message = "Material must be a value.";
-            log.error(message);
-            throw new IllegalArgumentException(message);
-        }
-        var result = blocks.stream().flatMap(Block::flatByStream)
+        checkIsNullOrEmpty(material);
+        var result = blocksToStream()
                 .filter(block -> block.getMaterial().equals(material)).collect(Collectors.toList());
+        checkIsEmpty(material, result);
+        return result;
+    }
+
+    private void checkIsEmpty(String material, List<Block> result) {
         if (result.isEmpty()) {
+            Objects.isNull(result);
             String message = String.format("There is no block with material: %s.", material);
             log.warn(message);
             throw new NoSuchElementException(message);
         }
-        return (List<Block>) result;
+    }
+
+    private void checkIsNullOrEmpty(String input) {
+        if (Objects.isNull(input) || input.isEmpty()) {
+            String message = "Input must be a value.";
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private Stream<Block> blocksToStream() {
+        return blocks.stream().flatMap(Block::flatByStream);
     }
 
     public void addBlock(Block block) {
@@ -50,6 +60,6 @@ public class Wall implements Structure {
 
     @Override
     public int count() {
-        return (int) blocks.stream().flatMap(block -> block.flatByStream()).count();
+        return (int) blocks.stream().flatMap(Block::flatByStream).count();
     }
 }

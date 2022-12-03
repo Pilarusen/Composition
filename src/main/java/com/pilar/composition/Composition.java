@@ -1,10 +1,13 @@
 package com.pilar.composition;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@Getter
 public class Composition extends BlockClass implements CompositeBlock {
 
     private List<Block> blocks = new ArrayList<>();
@@ -14,18 +17,30 @@ public class Composition extends BlockClass implements CompositeBlock {
     }
 
     public void addBlock(Block block) {
+        checkIsEqual(block);
+        checkIsBlockPresentInStructure(block);
+        blocks.add(block);
+        //TODO think about add custom exception
+    }
+
+    private void checkIsEqual(Block block) {
         if (this.equals(block)) {
             throw new IllegalArgumentException("Can not add composition to itself.");
-            //TODO think about add custom exception
         }
-        blocks.add(block);
+    }
+
+    private void checkIsBlockPresentInStructure(Block block) {
+        if (isBlockPresent(block)) {
+            throw new IllegalArgumentException("Block you try to add is already in structure.");
+        }
+    }
+
+    private boolean isBlockPresent(Block block) {
+        //TODO check if block has this
+        return false;
     }
 
     @Override
-    public List<Block> getBlocks() {
-        return blocks;
-    }
-
     public Stream<Block> flatByStream() {
         return Stream.of(super.flatByStream(),
                         blocks.stream().flatMap(Block::flatByStream))
