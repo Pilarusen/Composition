@@ -24,6 +24,17 @@ public class Composition extends BlockClass implements CompositeBlock {
         blocks.add(block);
     }
 
+    /**
+     * Methods checkIsEqual(block) and checkIsBlockPresentInStructure(block) are to avoid from add
+     * composition to another composition, due to avoid StackOverflowError when using Wall.class methods:
+     *  - findBlockByColor(String color)
+     *  - findBlocksByMaterial(String material)
+     *  - count().
+     *  The reason is that flatByStream() which is essential to do above operations
+     *  is providing to StackOverflowError when:
+     *  - composition is a block of itself (checkIsEqual(block)), also
+     *  - composition is already in structure of composition (checkIsBlockPresentInStructure(block))*
+     *  */
     private void checkIsEqual(Block block) {
         if (this.equals(block)) {
             String message = "Can not add composition to itself.";
@@ -40,8 +51,8 @@ public class Composition extends BlockClass implements CompositeBlock {
         }
     }
 
+    //checks if composition has this
     private boolean isBlockPresent(Block block) {
-        //TODO check if block has this
         //TODO think about add custom exception
         boolean result = false;
         if (block instanceof CompositeBlock) {
