@@ -50,10 +50,6 @@ public class Composition extends BlockClass implements CompositeBlock {
             log.info("==============================");
             log.info(String.valueOf(result));
             log.info("==============================");
-            if (result) {
-                log.error("error");
-                throw new IllegalArgumentException();
-            }
         }
         return result;
     }
