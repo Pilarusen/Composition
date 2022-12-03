@@ -17,25 +17,23 @@ public class Wall implements Structure {
     @Override
     public Optional<Block> findBlockByColor(String color) {
         checkIsNullOrEmpty(color);
-        var result = blocksToStream()
+        return blocksToStream()
                 .filter(block -> block.getColor().equals(color))
                 .findFirst();
-
-        return result;
     }
 
     @Override
     public List<Block> findBlocksByMaterial(String material) {
         checkIsNullOrEmpty(material);
         var result = blocksToStream()
-                .filter(block -> block.getMaterial().equals(material)).collect(Collectors.toList());
+                .filter(block -> block.getMaterial().equals(material))
+                .collect(Collectors.toList());
         checkIsEmpty(material, result);
         return result;
     }
 
-    private void checkIsEmpty(String material, List<Block> result) {
-        if (result.isEmpty()) {
-            Objects.isNull(result);
+    private void checkIsEmpty(String material, List<Block> blockList) {
+        if (blockList.isEmpty()) {
             String message = String.format("There is no block with material: %s.", material);
             log.warn(message);
             throw new NoSuchElementException(message);
@@ -60,6 +58,6 @@ public class Wall implements Structure {
 
     @Override
     public int count() {
-        return (int) blocks.stream().flatMap(Block::flatByStream).count();
+        return (int) blocksToStream().count();
     }
 }

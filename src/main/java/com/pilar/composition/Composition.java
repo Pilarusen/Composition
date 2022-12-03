@@ -20,7 +20,6 @@ public class Composition extends BlockClass implements CompositeBlock {
         checkIsEqual(block);
         checkIsBlockPresentInStructure(block);
         blocks.add(block);
-        //TODO think about add custom exception
     }
 
     private void checkIsEqual(Block block) {
@@ -37,6 +36,8 @@ public class Composition extends BlockClass implements CompositeBlock {
 
     private boolean isBlockPresent(Block block) {
         //TODO check if block has this
+        //TODO think about add custom exception
+
         return false;
     }
 
